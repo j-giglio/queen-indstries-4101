@@ -13,6 +13,67 @@ public class Company {
     private List<Employee> staff;
     private static Company company;
 
+    public List<Employee> getStaff() {
+        return staff;
+    }
+
+    private void printOrganizationChart() {
+        System.out.println();
+        System.out.println();
+        System.out.println(company.name + " Organization Chart");
+        for (Employee employee : staff) {
+            Director dir = (Director) employee;
+            System.out.println(" - " + dir.getName() + ", " + dir.getTitle());
+            for (int j = 0; j < dir.getReports().size(); j++) {
+                Manager mang = (Manager) dir.getReports().get(j);
+                System.out.println("    - " + mang.getName() + ", " + mang.getTitle());
+                for (int k = 0; k < mang.getReports().size(); k++) {
+                    System.out.println("       - " + mang.getReports().get(k).getName() + ", " + mang.getReports().get(k).getTitle());
+                }
+            }
+        }
+    }
+
+    private Director getDirector(String x) {
+        for (Employee employee : staff) {
+            if (employee.getTier() == Company.DIRECTOR && employee.getDepartment().equals(x)) {
+                return (Director) employee;
+            }
+        }
+        return null;
+    }
+
+    private Employee getEmployee(String x) {
+        for (Employee employee : staff) {
+            if (employee.getDepartment().equals(x) || employee.getName().equals(x)) {
+                return employee;
+            }
+            Director a = (Director) employee;
+
+            for (int i = 0; i < a.getReports().size(); i++) {
+                if (a.getReports().get(i).getDepartment().equals(x) || a.getReports().get(i).getName().equals(x)) {
+                    return a.getReports().get(i);
+                }
+                Manager b = (Manager) a.getReports().get(i);
+
+                for (int j = 0; j < b.getReports().size(); j++) {
+                    if (b.getReports().get(j).getDepartment().equals(x) || b.getReports().get(j).getName().equals(x)) {
+                        return b.getReports().get(j);
+                    }
+                }
+            }
+        }
+        return null;
+    }
+
+    private void printEmployeeDetails(Employee emp) {
+        System.out.println();
+        System.out.println("Employee     : " + emp.getName());
+        System.out.println("Department   : " + emp.getDepartment());
+        System.out.println("Title        : " + emp.getTitle());
+        System.out.println("Compensation : " + emp.getSalary());
+    }
+
     /**
      * Singleton constructor pattern. DO NOT MODIFY.
      *
